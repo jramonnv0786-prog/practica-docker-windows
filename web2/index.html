@@ -37,9 +37,10 @@
         }
 
         main {
-            max-width: 760px;
+            max-width: 1200px;
             margin: 24px auto;
             padding: 0 16px;
+            counter-reset: total proteinas hidratos grasas;
         }
 
         .instrucciones {
@@ -52,7 +53,6 @@
         fieldset {
             background: #fff;
             border: 1px solid #c8e6c9;
-            border-left: 5px solid #66bb6a;
             border-radius: 8px;
             margin: 20px 0;
             padding: 12px 16px;
@@ -62,6 +62,137 @@
             font-weight: bold;
             color: #2e7d32;
             padding: 0 6px;
+        }
+
+        /* Los apartados se colocan en columnas; en pantallas estrechas pasan a una sola */
+        .columnas,
+        .grupo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+            gap: 20px;
+            align-items: start;
+            margin: 24px 0;
+        }
+
+        .columnas fieldset,
+        .grupo fieldset {
+            margin: 0;
+            min-width: 0;
+        }
+
+        .grupo h2 {
+            grid-column: 1 / -1;
+            margin: 8px 0 0;
+            color: #2e7d32;
+            border-bottom: 2px solid #c8e6c9;
+            padding-bottom: 6px;
+        }
+
+        /* Cada macronutriente tiene su color: proteínas azul, hidratos ámbar, grasas morado */
+        .grupo.proteinas h2,
+        .grupo.hidratos h2,
+        .grupo.grasas h2 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 14px;
+            border: none;
+            border-left: 8px solid;
+            border-radius: 8px;
+        }
+
+        .grupo h2 .letra {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            color: #fff;
+            font-size: 0.8em;
+        }
+
+        .grupo.proteinas h2 {
+            color: #1565c0;
+            background: #e3f2fd;
+            border-color: #1565c0;
+        }
+
+        .grupo.proteinas h2 .letra {
+            background: #1565c0;
+        }
+
+        .grupo.hidratos h2 {
+            color: #8a6100;
+            background: #fff8e1;
+            border-color: #f9a825;
+        }
+
+        .grupo.hidratos h2 .letra {
+            background: #c88a00;
+        }
+
+        .grupo.grasas h2 {
+            color: #6a1b9a;
+            background: #f3e5f5;
+            border-color: #6a1b9a;
+        }
+
+        .grupo.grasas h2 .letra {
+            background: #6a1b9a;
+        }
+
+        .macros {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 4px;
+            font-weight: normal;
+        }
+
+        .macros i {
+            font-style: normal;
+            font-size: 0.8em;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .m-p {
+            color: #1565c0;
+            background: #e3f2fd;
+        }
+
+        .m-h {
+            color: #8a6100;
+            background: #fff8e1;
+        }
+
+        .m-g {
+            color: #6a1b9a;
+            background: #f3e5f5;
+        }
+
+        .leyenda {
+            display: inline-flex;
+            margin-top: 8px;
+        }
+
+        .saludable {
+            border-left: 5px solid #66bb6a;
+        }
+
+        .poco-saludable {
+            border-color: #ffccbc;
+            border-left: 5px solid #ff7043;
+        }
+
+        .poco-saludable legend,
+        .poco-saludable label b {
+            color: #d84315;
+        }
+
+        .poco-saludable label:hover {
+            background: #fbe9e7;
         }
 
         label {
@@ -87,37 +218,68 @@
             font-size: 0.9em;
         }
 
-        input[type="radio"] {
+        label b {
+            color: #2e7d32;
+        }
+
+        input[type="checkbox"] {
             width: 18px;
             height: 18px;
             accent-color: #2e7d32;
+        }
+
+        /* Cada casilla marcada suma sus calorías (--kcal) y sus gramos de macronutrientes (--p, --h, --g) */
+        input:checked {
+            counter-increment: total var(--kcal) proteinas var(--p) hidratos var(--h) grasas var(--g);
         }
 
         input:checked + span {
             font-weight: bold;
         }
 
-        input[type="number"],
-        select {
-            width: 140px;
-            padding: 6px 8px;
-            font-size: 1em;
-            border: 1px solid #c8e6c9;
-            border-radius: 6px;
-        }
-
-        select {
-            width: 260px;
-            max-width: 100%;
-        }
-
-        input[type="number"]:focus,
-        select:focus {
-            outline: 2px solid #66bb6a;
-        }
-
-        .botones {
+        .resultado {
+            position: sticky;
+            bottom: 0;
+            background: #2e7d32;
+            color: #fff;
             text-align: center;
+            font-size: 1.4em;
+            padding: 16px;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .total::after {
+            content: counter(total) " kcal";
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .totales-macros {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 8px;
+            font-size: 0.7em;
+        }
+
+        .totales-macros span {
+            background: #fff;
+            padding: 4px 12px;
+            border-radius: 14px;
+            font-weight: bold;
+        }
+
+        .totales-macros .m-p::after {
+            content: counter(proteinas) " g";
+        }
+
+        .totales-macros .m-h::after {
+            content: counter(hidratos) " g";
+        }
+
+        .totales-macros .m-g::after {
+            content: counter(grasas) " g";
         }
 
         button {
@@ -135,96 +297,6 @@
             background: #e8f5e9;
         }
 
-        button[type="submit"] {
-            background: #2e7d32;
-            color: #fff;
-        }
-
-        button[type="submit"]:hover {
-            background: #1b5e20;
-        }
-
-        .resultado {
-            background: #2e7d32;
-            color: #fff;
-            padding: 16px;
-            border-radius: 8px;
-            margin: 20px 0;
-        }
-
-        .resultado[hidden],
-        .dato[hidden] {
-            display: none;
-        }
-
-        .dato {
-            display: flex;
-            justify-content: space-between;
-            gap: 10px;
-            padding: 8px 0;
-            border-bottom: 1px solid #66bb6a;
-        }
-
-        .dato:last-of-type {
-            border-bottom: none;
-        }
-
-        .dato b {
-            font-size: 1.3em;
-            text-align: right;
-        }
-
-        .principal b {
-            font-size: 1.6em;
-        }
-
-        .subtitulo {
-            font-size: 1.1em;
-            margin: 20px 0 4px;
-            padding-top: 12px;
-            border-top: 2px solid #fff;
-        }
-
-        .resultado em {
-            font-style: normal;
-            color: #c8e6c9;
-            font-size: 0.9em;
-        }
-
-        .nota {
-            background: #fff;
-            color: #263238;
-            padding: 10px 14px;
-            border-radius: 6px;
-            margin: 12px 0 0;
-        }
-
-        .tabla-imc {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        .tabla-imc th,
-        .tabla-imc td {
-            padding: 6px 8px;
-            border-bottom: 1px solid #e8f5e9;
-            text-align: left;
-        }
-
-        .tabla-imc th {
-            color: #2e7d32;
-        }
-
-        .tabla-imc th:last-child,
-        .tabla-imc td:last-child {
-            text-align: right;
-        }
-
-        .tabla-imc td:last-child {
-            text-align: right;
-            color: #607d8b;
-        }
-
         footer {
             text-align: center;
             color: #607d8b;
@@ -235,177 +307,131 @@
 </head>
 <body>
     <header>
-        <h1>Calculadora de metabolismo basal</h1>
+        <h1>NutriWeb</h1>
         <p class="servidor">Estás en el SERVIDOR 2</p>
     </header>
 
     <main>
-        <form id="calculadora">
+        <form>
             <p class="instrucciones">
-                Introduce tus datos para calcular tu índice de masa corporal (IMC), tu metabolismo
-                basal y las calorías diarias que necesitas. Se usa la ecuación de Mifflin-St Jeor y,
-                si indicas tu porcentaje de grasa corporal, la de Katch-McArdle, que es más precisa
-                porque tiene en cuenta tu masa muscular.
+                Marca los alimentos que vas a comer y verás el total de calorías abajo.
+                Cada casilla equivale a una ración.
+                <br>
+                <small class="macros leyenda"><i class="m-p">P = proteínas</i><i class="m-h">H = hidratos de carbono</i><i class="m-g">G = grasas</i></small>
             </p>
 
-            <fieldset>
-                <legend>Sexo</legend>
-                <label><input type="radio" name="sexo" value="hombre" required><span>Hombre</span></label>
-                <label><input type="radio" name="sexo" value="mujer"><span>Mujer</span></label>
-            </fieldset>
+            <div class="columnas">
+                <fieldset>
+                    <legend>Frutas</legend>
+                    <label><input type="checkbox" style="--kcal: 52; --p: 0; --h: 14; --g: 0"><span>Manzana <em>(1 unidad, 100 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 14 g</i><i class="m-g">G 0 g</i></small></span><b>52 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 105; --p: 1; --h: 27; --g: 0"><span>Plátano <em>(1 unidad, 118 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 27 g</i><i class="m-g">G 0 g</i></small></span><b>105 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 62; --p: 1; --h: 15; --g: 0"><span>Naranja <em>(1 unidad, 131 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 15 g</i><i class="m-g">G 0 g</i></small></span><b>62 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 32; --p: 1; --h: 8; --g: 0"><span>Fresas <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 8 g</i><i class="m-g">G 0 g</i></small></span><b>32 kcal</b></label>
+                </fieldset>
 
-            <fieldset>
-                <legend>Datos personales</legend>
-                <label><span>Edad <em>(años)</em></span><input type="number" id="edad" min="15" max="100" step="1" required></label>
-                <label><span>Peso <em>(kg)</em></span><input type="number" id="peso" min="30" max="250" step="0.1" required></label>
-                <label><span>Altura <em>(cm)</em></span><input type="number" id="altura" min="120" max="230" step="1" required></label>
-                <label><span>Grasa corporal <em>(%, opcional: báscula de bioimpedancia, pliegues o DEXA)</em></span><input type="number" id="grasa" min="3" max="60" step="0.1"></label>
-            </fieldset>
+                <fieldset>
+                    <legend>Verduras</legend>
+                    <label><input type="checkbox" style="--kcal: 22; --p: 1; --h: 5; --g: 0"><span>Tomate <em>(1 unidad, 120 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 5 g</i><i class="m-g">G 0 g</i></small></span><b>22 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 15; --p: 1; --h: 3; --g: 0"><span>Lechuga <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 3 g</i><i class="m-g">G 0 g</i></small></span><b>15 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 41; --p: 1; --h: 10; --g: 0"><span>Zanahoria <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 10 g</i><i class="m-g">G 0 g</i></small></span><b>41 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 34; --p: 3; --h: 7; --g: 0"><span>Brócoli <em>(100 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 7 g</i><i class="m-g">G 0 g</i></small></span><b>34 kcal</b></label>
+                </fieldset>
+            </div>
 
-            <fieldset>
-                <legend>Actividad física</legend>
-                <label>
-                    <span>Nivel de actividad</span>
-                    <select id="actividad" required>
-                        <option value="1.2">Sedentario (poco o ningún ejercicio)</option>
-                        <option value="1.375">Ligero (1-3 días por semana)</option>
-                        <option value="1.55" selected>Moderado (3-5 días por semana)</option>
-                        <option value="1.725">Intenso (6-7 días por semana)</option>
-                        <option value="1.9">Muy intenso (trabajo físico o doble sesión)</option>
-                    </select>
-                </label>
-            </fieldset>
+            <section class="grupo proteinas">
+                <h2><span class="letra">P</span>Alimentos proteicos</h2>
 
-            <div class="botones">
-                <button type="submit">Calcular</button>
-                <button type="reset">Borrar datos</button>
+                <fieldset class="saludable">
+                    <legend>Saludables</legend>
+                    <label><input type="checkbox" style="--kcal: 165; --p: 31; --h: 0; --g: 4"><span>Pechuga de pollo <em>(100 g)</em><small class="macros"><i class="m-p">P 31 g</i><i class="m-h">H 0 g</i><i class="m-g">G 4 g</i></small></span><b>165 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 136; --p: 30; --h: 0; --g: 2"><span>Pechuga de pavo asada <em>(100 g)</em><small class="macros"><i class="m-p">P 30 g</i><i class="m-h">H 0 g</i><i class="m-g">G 2 g</i></small></span><b>136 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 78; --p: 6; --h: 1; --g: 5"><span>Huevo cocido <em>(1 unidad, 50 g)</em><small class="macros"><i class="m-p">P 6 g</i><i class="m-h">H 1 g</i><i class="m-g">G 5 g</i></small></span><b>78 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 206; --p: 22; --h: 0; --g: 12"><span>Salmón cocinado <em>(100 g)</em><small class="macros"><i class="m-p">P 22 g</i><i class="m-h">H 0 g</i><i class="m-g">G 12 g</i></small></span><b>206 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 105; --p: 23; --h: 0; --g: 1"><span>Bacalao fresco cocinado <em>(100 g)</em><small class="macros"><i class="m-p">P 23 g</i><i class="m-h">H 0 g</i><i class="m-g">G 1 g</i></small></span><b>105 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 52; --p: 12; --h: 0; --g: 1"><span>Atún al natural <em>(1 lata, 60 g escurrido)</em><small class="macros"><i class="m-p">P 12 g</i><i class="m-h">H 0 g</i><i class="m-g">G 1 g</i></small></span><b>52 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 116; --p: 9; --h: 20; --g: 0"><span>Lentejas cocidas <em>(100 g)</em><small class="macros"><i class="m-p">P 9 g</i><i class="m-h">H 20 g</i><i class="m-g">G 0 g</i></small></span><b>116 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 164; --p: 9; --h: 27; --g: 3"><span>Garbanzos cocidos <em>(100 g)</em><small class="macros"><i class="m-p">P 9 g</i><i class="m-h">H 27 g</i><i class="m-g">G 3 g</i></small></span><b>164 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 144; --p: 17; --h: 3; --g: 9"><span>Tofu firme <em>(100 g)</em><small class="macros"><i class="m-p">P 17 g</i><i class="m-h">H 3 g</i><i class="m-g">G 9 g</i></small></span><b>144 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 76; --p: 4; --h: 6; --g: 4"><span>Yogur natural <em>(1 unidad, 125 g)</em><small class="macros"><i class="m-p">P 4 g</i><i class="m-h">H 6 g</i><i class="m-g">G 4 g</i></small></span><b>76 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 46; --p: 8; --h: 4; --g: 0"><span>Queso fresco batido 0% <em>(100 g)</em><small class="macros"><i class="m-p">P 8 g</i><i class="m-h">H 4 g</i><i class="m-g">G 0 g</i></small></span><b>46 kcal</b></label>
+                </fieldset>
+
+                <fieldset class="poco-saludable">
+                    <legend>Poco saludables</legend>
+                    <label><input type="checkbox" style="--kcal: 250; --p: 26; --h: 0; --g: 15"><span>Hamburguesa de ternera a la plancha <em>(1 unidad, 100 g)</em><small class="macros"><i class="m-p">P 26 g</i><i class="m-h">H 0 g</i><i class="m-g">G 15 g</i></small></span><b>250 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 232; --p: 8; --h: 3; --g: 21"><span>Salchichas Frankfurt <em>(2 unidades, 80 g)</em><small class="macros"><i class="m-p">P 8 g</i><i class="m-h">H 3 g</i><i class="m-g">G 21 g</i></small></span><b>232 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 93; --p: 5; --h: 1; --g: 8"><span>Mortadela <em>(30 g)</em><small class="macros"><i class="m-p">P 5 g</i><i class="m-h">H 1 g</i><i class="m-g">G 8 g</i></small></span><b>93 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 122; --p: 7; --h: 0; --g: 10"><span>Salami <em>(30 g)</em><small class="macros"><i class="m-p">P 7 g</i><i class="m-h">H 0 g</i><i class="m-g">G 10 g</i></small></span><b>122 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 108; --p: 8; --h: 0; --g: 8"><span>Bacon frito <em>(2 lonchas, 23 g)</em><small class="macros"><i class="m-p">P 8 g</i><i class="m-h">H 0 g</i><i class="m-g">G 8 g</i></small></span><b>108 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 268; --p: 12; --h: 16; --g: 17"><span>Nuggets de pollo precocinados <em>(100 g)</em><small class="macros"><i class="m-p">P 12 g</i><i class="m-h">H 16 g</i><i class="m-g">G 17 g</i></small></span><b>268 kcal</b></label>
+                </fieldset>
+            </section>
+
+            <section class="grupo hidratos">
+                <h2><span class="letra">H</span>Hidratos de carbono</h2>
+
+                <fieldset class="saludable">
+                    <legend>Saludables</legend>
+                    <label><input type="checkbox" style="--kcal: 123; --p: 3; --h: 26; --g: 1"><span>Arroz integral cocido <em>(100 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 26 g</i><i class="m-g">G 1 g</i></small></span><b>123 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 130; --p: 3; --h: 28; --g: 0"><span>Arroz blanco cocido <em>(100 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 28 g</i><i class="m-g">G 0 g</i></small></span><b>130 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 81; --p: 4; --h: 14; --g: 1"><span>Pan integral <em>(1 rebanada, 32 g)</em><small class="macros"><i class="m-p">P 4 g</i><i class="m-h">H 14 g</i><i class="m-g">G 1 g</i></small></span><b>81 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 158; --p: 6; --h: 31; --g: 1"><span>Pasta cocida <em>(100 g)</em><small class="macros"><i class="m-p">P 6 g</i><i class="m-h">H 31 g</i><i class="m-g">G 1 g</i></small></span><b>158 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 152; --p: 5; --h: 27; --g: 3"><span>Copos de avena <em>(40 g)</em><small class="macros"><i class="m-p">P 5 g</i><i class="m-h">H 27 g</i><i class="m-g">G 3 g</i></small></span><b>152 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 120; --p: 4; --h: 21; --g: 2"><span>Quinoa cocida <em>(100 g)</em><small class="macros"><i class="m-p">P 4 g</i><i class="m-h">H 21 g</i><i class="m-g">G 2 g</i></small></span><b>120 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 129; --p: 3; --h: 30; --g: 0"><span>Patata cocida <em>(150 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 30 g</i><i class="m-g">G 0 g</i></small></span><b>129 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 135; --p: 3; --h: 31; --g: 0"><span>Boniato asado <em>(150 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 31 g</i><i class="m-g">G 0 g</i></small></span><b>135 kcal</b></label>
+                </fieldset>
+
+                <fieldset class="poco-saludable">
+                    <legend>Poco saludables</legend>
+                    <label><input type="checkbox" style="--kcal: 244; --p: 5; --h: 27; --g: 13"><span>Cruasán <em>(1 unidad, 60 g)</em><small class="macros"><i class="m-p">P 5 g</i><i class="m-h">H 27 g</i><i class="m-g">G 13 g</i></small></span><b>244 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 253; --p: 4; --h: 29; --g: 14"><span>Dónut glaseado <em>(1 unidad, 60 g)</em><small class="macros"><i class="m-p">P 4 g</i><i class="m-h">H 29 g</i><i class="m-g">G 14 g</i></small></span><b>253 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 285; --p: 12; --h: 36; --g: 10"><span>Pizza de queso <em>(1 porción, 107 g)</em><small class="macros"><i class="m-p">P 12 g</i><i class="m-h">H 36 g</i><i class="m-g">G 10 g</i></small></span><b>285 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 156; --p: 2; --h: 36; --g: 0"><span>Cereales azucarados <em>(40 g)</em><small class="macros"><i class="m-p">P 2 g</i><i class="m-h">H 36 g</i><i class="m-g">G 0 g</i></small></span><b>156 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 198; --p: 0; --h: 49; --g: 0"><span>Gominolas <em>(50 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 49 g</i><i class="m-g">G 0 g</i></small></span><b>198 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 139; --p: 0; --h: 34; --g: 0"><span>Refresco azucarado <em>(1 lata, 330 ml)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 34 g</i><i class="m-g">G 0 g</i></small></span><b>139 kcal</b></label>
+                </fieldset>
+            </section>
+
+            <section class="grupo grasas">
+                <h2><span class="letra">G</span>Grasas</h2>
+
+                <fieldset class="saludable">
+                    <legend>Saludables</legend>
+                    <label><input type="checkbox" style="--kcal: 88; --p: 0; --h: 0; --g: 10"><span>Aceite de oliva <em>(1 cucharada, 10 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 0 g</i><i class="m-g">G 10 g</i></small></span><b>88 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 112; --p: 1; --h: 6; --g: 10"><span>Aguacate <em>(½ unidad, 70 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 6 g</i><i class="m-g">G 10 g</i></small></span><b>112 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 196; --p: 5; --h: 4; --g: 20"><span>Nueces <em>(30 g)</em><small class="macros"><i class="m-p">P 5 g</i><i class="m-h">H 4 g</i><i class="m-g">G 20 g</i></small></span><b>196 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 174; --p: 6; --h: 6; --g: 15"><span>Almendras crudas <em>(30 g)</em><small class="macros"><i class="m-p">P 6 g</i><i class="m-h">H 6 g</i><i class="m-g">G 15 g</i></small></span><b>174 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 58; --p: 0; --h: 2; --g: 6"><span>Aceitunas <em>(10 unidades, 40 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 2 g</i><i class="m-g">G 6 g</i></small></span><b>58 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 58; --p: 2; --h: 5; --g: 4"><span>Semillas de chía <em>(1 cucharada, 12 g)</em><small class="macros"><i class="m-p">P 2 g</i><i class="m-h">H 5 g</i><i class="m-g">G 4 g</i></small></span><b>58 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 96; --p: 4; --h: 4; --g: 8"><span>Crema de cacahuete natural <em>(1 cucharada, 16 g)</em><small class="macros"><i class="m-p">P 4 g</i><i class="m-h">H 4 g</i><i class="m-g">G 8 g</i></small></span><b>96 kcal</b></label>
+                </fieldset>
+
+                <fieldset class="poco-saludable">
+                    <legend>Poco saludables</legend>
+                    <label><input type="checkbox" style="--kcal: 100; --p: 0; --h: 0; --g: 11"><span>Mantequilla <em>(1 cucharada, 14 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 0 g</i><i class="m-g">G 11 g</i></small></span><b>100 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 102; --p: 0; --h: 0; --g: 11"><span>Mayonesa <em>(1 cucharada, 15 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 0 g</i><i class="m-g">G 11 g</i></small></span><b>102 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 98; --p: 1; --h: 2; --g: 10"><span>Nata para cocinar <em>(50 ml)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 2 g</i><i class="m-g">G 10 g</i></small></span><b>98 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 108; --p: 1; --h: 12; --g: 6"><span>Crema de cacao y avellanas <em>(1 cucharada, 20 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 12 g</i><i class="m-g">G 6 g</i></small></span><b>108 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 266; --p: 3; --h: 27; --g: 17"><span>Patatas fritas de bolsa <em>(50 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 27 g</i><i class="m-g">G 17 g</i></small></span><b>266 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 312; --p: 3; --h: 41; --g: 15"><span>Patatas fritas de comida rápida <em>(100 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 41 g</i><i class="m-g">G 15 g</i></small></span><b>312 kcal</b></label>
+                </fieldset>
+            </section>
+
+            <div class="resultado">
+                <div class="total">Total:</div>
+                <div class="totales-macros">
+                    <span class="m-p">Proteínas: </span>
+                    <span class="m-h">Hidratos: </span>
+                    <span class="m-g">Grasas: </span>
+                </div>
+                <button type="reset">Borrar selección</button>
             </div>
         </form>
-
-        <section class="resultado" id="resultado" hidden>
-            <div class="dato"><span>Índice de masa corporal</span><b id="imc"></b></div>
-            <div class="dato"><span>Clasificación (OMS)</span><b id="categoria"></b></div>
-            <div class="dato"><span>Metabolismo basal <em>(Mifflin-St Jeor)</em></span><b id="tmb-mifflin"></b></div>
-            <div class="dato" id="fila-masa-magra" hidden><span>Masa libre de grasa</span><b id="masa-magra"></b></div>
-            <div class="dato" id="fila-katch" hidden><span>Metabolismo basal <em>(Katch-McArdle)</em></span><b id="tmb-katch"></b></div>
-            <div class="dato principal"><span>Consumo diario recomendado <em id="formula-usada"></em></span><b id="calorias"></b></div>
-            <p class="nota" id="nota-formula"></p>
-
-            <h2 class="subtitulo">Reparto de macronutrientes</h2>
-            <div class="dato"><span>Hidratos de carbono <em>(50 %)</em></span><b id="hidratos"></b></div>
-            <div class="dato"><span>Proteínas <em>(20 %)</em></span><b id="proteinas"></b></div>
-            <div class="dato"><span>Grasas <em>(30 %)</em></span><b id="grasas"></b></div>
-            <p class="nota">
-                Reparto equilibrado dentro de los rangos de referencia de la EFSA y del
-                Institute of Medicine: hidratos 45-60 %, proteínas 10-35 % y grasas 20-35 %
-                de la energía diaria. Cada gramo aporta 4 kcal (hidratos y proteínas) o 9 kcal (grasas).
-            </p>
-            <p class="nota">
-                Para perder peso de forma saludable, resta unas 500 kcal al día (<b id="perder"></b>);
-                para ganarlo, suma unas 300-500 kcal. Vuelve a cargar la página hasta llegar al
-                <b>Servidor 1</b> y suma los alimentos de tu día para compararlos con esta cifra.
-            </p>
-        </section>
-
-        <fieldset>
-            <legend>Tabla de IMC (OMS)</legend>
-            <table class="tabla-imc">
-                <tr><th>Clasificación</th><th>IMC</th></tr>
-                <tr><td>Bajo peso</td><td>menos de 18,5</td></tr>
-                <tr><td>Peso normal</td><td>18,5 - 24,9</td></tr>
-                <tr><td>Sobrepeso</td><td>25 - 29,9</td></tr>
-                <tr><td>Obesidad grado I</td><td>30 - 34,9</td></tr>
-                <tr><td>Obesidad grado II</td><td>35 - 39,9</td></tr>
-                <tr><td>Obesidad grado III</td><td>40 o más</td></tr>
-            </table>
-        </fieldset>
     </main>
 
     <footer>
-        Práctica Docker &middot; Servidor 2 &middot; Mifflin-St Jeor (1990) y Katch-McArdle
+        Práctica Docker &middot; Servidor 2 &middot; Valores según USDA FoodData Central (SR Legacy)
     </footer>
-
-    <script>
-        const form = document.getElementById('calculadora');
-        const resultado = document.getElementById('resultado');
-        const numero = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 1 });
-
-        function categoriaImc(imc) {
-            if (imc < 18.5) return 'Bajo peso';
-            if (imc < 25) return 'Peso normal';
-            if (imc < 30) return 'Sobrepeso';
-            if (imc < 35) return 'Obesidad grado I';
-            if (imc < 40) return 'Obesidad grado II';
-            return 'Obesidad grado III';
-        }
-
-        // Ecuación de Mifflin-St Jeor (1990): solo cambia la constante final según el sexo
-        function mifflinStJeor(sexo, peso, altura, edad) {
-            const base = 10 * peso + 6.25 * altura - 5 * edad;
-            return sexo === 'hombre' ? base + 5 : base - 161;
-        }
-
-        // Ecuación de Katch-McArdle: depende solo de la masa libre de grasa (kg)
-        function katchMcArdle(masaMagra) {
-            return 370 + 21.6 * masaMagra;
-        }
-
-        // Porcentaje de las calorías diarias y kcal que aporta cada gramo
-        const macronutrientes = [
-            { id: 'hidratos', porcentaje: 0.50, kcalPorGramo: 4 },
-            { id: 'proteinas', porcentaje: 0.20, kcalPorGramo: 4 },
-            { id: 'grasas', porcentaje: 0.30, kcalPorGramo: 9 }
-        ];
-
-        form.addEventListener('submit', (evento) => {
-            evento.preventDefault();
-
-            const sexo = form.sexo.value;
-            const edad = Number(document.getElementById('edad').value);
-            const peso = Number(document.getElementById('peso').value);
-            const altura = Number(document.getElementById('altura').value);
-            const actividad = Number(document.getElementById('actividad').value);
-            const grasaTexto = document.getElementById('grasa').value;
-            const conGrasa = grasaTexto !== '';
-
-            const metros = altura / 100;
-            const imc = peso / (metros * metros);
-            const tmbMifflin = mifflinStJeor(sexo, peso, altura, edad);
-
-            // Si se conoce el % de grasa, Katch-McArdle es la más precisa; si no, Mifflin-St Jeor
-            let tmb = tmbMifflin;
-            if (conGrasa) {
-                const masaMagra = peso * (1 - Number(grasaTexto) / 100);
-                tmb = katchMcArdle(masaMagra);
-                document.getElementById('masa-magra').textContent = numero.format(masaMagra) + ' kg';
-                document.getElementById('tmb-katch').textContent = Math.round(tmb) + ' kcal';
-            }
-            const calorias = tmb * actividad;
-
-            document.getElementById('fila-masa-magra').hidden = !conGrasa;
-            document.getElementById('fila-katch').hidden = !conGrasa;
-            document.getElementById('formula-usada').textContent = conGrasa ? '(según Katch-McArdle)' : '(según Mifflin-St Jeor)';
-            document.getElementById('nota-formula').textContent = conGrasa
-                ? 'Katch-McArdle calcula el gasto a partir de tu masa libre de grasa, por eso es la más precisa cuando el porcentaje de grasa está bien medido.'
-                : 'Mifflin-St Jeor es la ecuación recomendada por la Academy of Nutrition and Dietetics cuando no se conoce la composición corporal. Si indicas tu % de grasa, se usará Katch-McArdle, que es más precisa.';
-
-            document.getElementById('imc').textContent = numero.format(imc);
-            document.getElementById('categoria').textContent = categoriaImc(imc);
-            document.getElementById('tmb-mifflin').textContent = Math.round(tmbMifflin) + ' kcal';
-            document.getElementById('calorias').textContent = Math.round(calorias) + ' kcal';
-            document.getElementById('perder').textContent = Math.round(calorias - 500) + ' kcal';
-
-            macronutrientes.forEach((macro) => {
-                const kcal = calorias * macro.porcentaje;
-                const gramos = kcal / macro.kcalPorGramo;
-                document.getElementById(macro.id).textContent = Math.round(gramos) + ' g · ' + Math.round(kcal) + ' kcal';
-            });
-            resultado.hidden = false;
-        });
-
-        form.addEventListener('reset', () => {
-            resultado.hidden = true;
-        });
-    </script>
 </body>
 </html>
