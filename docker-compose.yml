@@ -1,0 +1,38 @@
+name: practica-docker-windows
+
+services:
+  balanceador:
+    image: nginx:alpine
+    container_name: balanceador
+    ports:
+      - "80:80"
+    volumes:
+      - ./balanceador/default.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - red-balanceo
+    depends_on:
+      - web1
+      - web2
+
+  web1:
+    image: httpd:alpine
+    container_name: web1
+    volumes:
+      - ./web1:/usr/local/apache2/htdocs/
+    networks:
+      - red-balanceo
+
+  web2:
+    image: httpd:alpine
+    container_name: web2
+    volumes:
+      - ./web2:/usr/local/apache2/htdocs/
+    networks:
+      - red-balanceo
+
+networks:
+  red-balanceo:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.0.0/16
