@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NutriWeb - Servidor 2</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            font-family: Arial, Helvetica, sans-serif;
+            background: #f1f8f2;
+            color: #263238;
+        }
+
+        header {
+            background: #2e7d32;
+            color: #fff;
+            text-align: center;
+            padding: 24px 16px;
+        }
+
+        header h1 {
+            margin: 0 0 8px;
+        }
+
+        .servidor {
+            display: inline-block;
+            background: #fff;
+            color: #2e7d32;
+            font-weight: bold;
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        main {
+            max-width: 760px;
+            margin: 24px auto;
+            padding: 0 16px;
+        }
+
+        .instrucciones {
+            background: #fff;
+            border-left: 5px solid #66bb6a;
+            padding: 12px 16px;
+            border-radius: 6px;
+        }
+
+        fieldset {
+            background: #fff;
+            border: 1px solid #c8e6c9;
+            border-left: 5px solid #66bb6a;
+            border-radius: 8px;
+            margin: 20px 0;
+            padding: 12px 16px;
+        }
+
+        legend {
+            font-weight: bold;
+            color: #2e7d32;
+            padding: 0 6px;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        label:hover {
+            background: #e8f5e9;
+        }
+
+        label span {
+            flex: 1;
+        }
+
+        label em {
+            font-style: normal;
+            color: #607d8b;
+            font-size: 0.9em;
+        }
+
+        input[type="radio"] {
+            width: 18px;
+            height: 18px;
+            accent-color: #2e7d32;
+        }
+
+        input:checked + span {
+            font-weight: bold;
+        }
+
+        input[type="number"],
+        select {
+            width: 140px;
+            padding: 6px 8px;
+            font-size: 1em;
+            border: 1px solid #c8e6c9;
+            border-radius: 6px;
+        }
+
+        select {
+            width: 260px;
+            max-width: 100%;
+        }
+
+        input[type="number"]:focus,
+        select:focus {
+            outline: 2px solid #66bb6a;
+        }
+
+        .botones {
+            text-align: center;
+        }
+
+        button {
+            margin-top: 12px;
+            background: #fff;
+            color: #2e7d32;
+            border: 2px solid #2e7d32;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-size: 1em;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background: #e8f5e9;
+        }
+
+        button[type="submit"] {
+            background: #2e7d32;
+            color: #fff;
+        }
+
+        button[type="submit"]:hover {
+            background: #1b5e20;
+        }
+
+        .resultado {
+            background: #2e7d32;
+            color: #fff;
+            padding: 16px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .resultado[hidden] {
+            display: none;
+        }
+
+        .dato {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 8px 0;
+            border-bottom: 1px solid #66bb6a;
+        }
+
+        .dato:last-of-type {
+            border-bottom: none;
+        }
+
+        .dato b {
+            font-size: 1.3em;
+            text-align: right;
+        }
+
+        .principal b {
+            font-size: 1.6em;
+        }
+
+        .subtitulo {
+            font-size: 1.1em;
+            margin: 20px 0 4px;
+            padding-top: 12px;
+            border-top: 2px solid #fff;
+        }
+
+        .resultado em {
+            font-style: normal;
+            color: #c8e6c9;
+            font-size: 0.9em;
+        }
+
+        .nota {
+            background: #fff;
+            color: #263238;
+            padding: 10px 14px;
+            border-radius: 6px;
+            margin: 12px 0 0;
+        }
+
+        .tabla-imc {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .tabla-imc th,
+        .tabla-imc td {
+            padding: 6px 8px;
+            border-bottom: 1px solid #e8f5e9;
+            text-align: left;
+        }
+
+        .tabla-imc th {
+            color: #2e7d32;
+        }
+
+        .tabla-imc th:last-child,
+        .tabla-imc td:last-child {
+            text-align: right;
+        }
+
+        .tabla-imc td:last-child {
+            text-align: right;
+            color: #607d8b;
+        }
+
+        footer {
+            text-align: center;
+            color: #607d8b;
+            padding: 16px;
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1> Calculadora Harris-Benedict</h1>
+        <p class="servidor">Estás en el SERVIDOR 2</p>
+    </header>
+
+    <main>
+        <form id="calculadora">
+            <p class="instrucciones">
+                Introduce tus datos para calcular tu índice de masa corporal (IMC), tu metabolismo
+                basal con la ecuación de Harris-Benedict y las calorías diarias que necesitas.
+            </p>
+
+            <fieldset>
+                <legend>Sexo</legend>
+                <label><input type="radio" name="sexo" value="hombre" required><span>Hombre</span></label>
+                <label><input type="radio" name="sexo" value="mujer"><span>Mujer</span></label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Datos personales</legend>
+                <label><span>Edad <em>(años)</em></span><input type="number" id="edad" min="15" max="100" step="1" required></label>
+                <label><span>Peso <em>(kg)</em></span><input type="number" id="peso" min="30" max="250" step="0.1" required></label>
+                <label><span>Altura <em>(cm)</em></span><input type="number" id="altura" min="120" max="230" step="1" required></label>
+            </fieldset>
+
+            <fieldset>
+                <legend>Actividad física</legend>
+                <label>
+                    <span>Nivel de actividad</span>
+                    <select id="actividad" required>
+                        <option value="1.2">Sedentario (poco o ningún ejercicio)</option>
+                        <option value="1.375">Ligero (1-3 días por semana)</option>
+                        <option value="1.55" selected>Moderado (3-5 días por semana)</option>
+                        <option value="1.725">Intenso (6-7 días por semana)</option>
+                        <option value="1.9">Muy intenso (trabajo físico o doble sesión)</option>
+                    </select>
+                </label>
+            </fieldset>
+
+            <div class="botones">
+                <button type="submit">Calcular</button>
+                <button type="reset">Borrar datos</button>
+            </div>
+        </form>
+
+        <section class="resultado" id="resultado" hidden>
+            <div class="dato"><span>Índice de masa corporal</span><b id="imc"></b></div>
+            <div class="dato"><span>Clasificación (OMS)</span><b id="categoria"></b></div>
+            <div class="dato"><span>Metabolismo basal (Harris-Benedict)</span><b id="tmb"></b></div>
+            <div class="dato principal"><span>Consumo diario recomendado</span><b id="calorias"></b></div>
+
+            <h2 class="subtitulo">Reparto de macronutrientes</h2>
+            <div class="dato"><span>Hidratos de carbono <em>(50 %)</em></span><b id="hidratos"></b></div>
+            <div class="dato"><span>Proteínas <em>(20 %)</em></span><b id="proteinas"></b></div>
+            <div class="dato"><span>Grasas <em>(30 %)</em></span><b id="grasas"></b></div>
+            <p class="nota">
+                Reparto equilibrado dentro de los rangos de referencia de la EFSA y del
+                Institute of Medicine: hidratos 45-60 %, proteínas 10-35 % y grasas 20-35 %
+                de la energía diaria. Cada gramo aporta 4 kcal (hidratos y proteínas) o 9 kcal (grasas).
+            </p>
+            <p class="nota">
+                Para perder peso de forma saludable, resta unas 500 kcal al día (<b id="perder"></b>);
+                para ganarlo, suma unas 300-500 kcal. Vuelve a cargar la página hasta llegar al
+                <b>Servidor 1</b> y suma los alimentos de tu día para compararlos con esta cifra.
+            </p>
+        </section>
+
+        <fieldset>
+            <legend>Tabla de IMC (OMS)</legend>
+            <table class="tabla-imc">
+                <tr><th>Clasificación</th><th>IMC</th></tr>
+                <tr><td>Bajo peso</td><td>menos de 18,5</td></tr>
+                <tr><td>Peso normal</td><td>18,5 - 24,9</td></tr>
+                <tr><td>Sobrepeso</td><td>25 - 29,9</td></tr>
+                <tr><td>Obesidad grado I</td><td>30 - 34,9</td></tr>
+                <tr><td>Obesidad grado II</td><td>35 - 39,9</td></tr>
+                <tr><td>Obesidad grado III</td><td>40 o más</td></tr>
+            </table>
+        </fieldset>
+    </main>
+
+    <footer>
+        Práctica Docker &middot; Servidor 2 &middot; Harris-Benedict revisada (Roza y Shizgal, 1984)
+    </footer>
+
+    <script>
+        const form = document.getElementById('calculadora');
+        const resultado = document.getElementById('resultado');
+        const numero = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 1 });
+
+        function categoriaImc(imc) {
+            if (imc < 18.5) return 'Bajo peso';
+            if (imc < 25) return 'Peso normal';
+            if (imc < 30) return 'Sobrepeso';
+            if (imc < 35) return 'Obesidad grado I';
+            if (imc < 40) return 'Obesidad grado II';
+            return 'Obesidad grado III';
+        }
+
+        // Ecuación de Harris-Benedict revisada por Roza y Shizgal (1984)
+        function harrisBenedict(sexo, peso, altura, edad) {
+            if (sexo === 'hombre') {
+                return 88.362 + 13.397 * peso + 4.799 * altura - 5.677 * edad;
+            }
+            return 447.593 + 9.247 * peso + 3.098 * altura - 4.330 * edad;
+        }
+
+        // Porcentaje de las calorías diarias y kcal que aporta cada gramo
+        const macronutrientes = [
+            { id: 'hidratos', porcentaje: 0.50, kcalPorGramo: 4 },
+            { id: 'proteinas', porcentaje: 0.20, kcalPorGramo: 4 },
+            { id: 'grasas', porcentaje: 0.30, kcalPorGramo: 9 }
+        ];
+
+        form.addEventListener('submit', (evento) => {
+            evento.preventDefault();
+
+            const sexo = form.sexo.value;
+            const edad = Number(document.getElementById('edad').value);
+            const peso = Number(document.getElementById('peso').value);
+            const altura = Number(document.getElementById('altura').value);
+            const actividad = Number(document.getElementById('actividad').value);
+
+            const metros = altura / 100;
+            const imc = peso / (metros * metros);
+            const tmb = harrisBenedict(sexo, peso, altura, edad);
+            const calorias = tmb * actividad;
+
+            document.getElementById('imc').textContent = numero.format(imc);
+            document.getElementById('categoria').textContent = categoriaImc(imc);
+            document.getElementById('tmb').textContent = Math.round(tmb) + ' kcal';
+            document.getElementById('calorias').textContent = Math.round(calorias) + ' kcal';
+            document.getElementById('perder').textContent = Math.round(calorias - 500) + ' kcal';
+
+            macronutrientes.forEach((macro) => {
+                const kcal = calorias * macro.porcentaje;
+                const gramos = kcal / macro.kcalPorGramo;
+                document.getElementById(macro.id).textContent = Math.round(gramos) + ' g · ' + Math.round(kcal) + ' kcal';
+            });
+            resultado.hidden = false;
+        });
+
+        form.addEventListener('reset', () => {
+            resultado.hidden = true;
+        });
+    </script>
+</body>
+</html>
