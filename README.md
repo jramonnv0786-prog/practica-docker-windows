@@ -38,8 +38,8 @@
 
 Cada vez que recargas la página, el balanceador te manda a uno de los dos servidores. Cada página indica en la cabecera en qué servidor estás, así que el reparto de peticiones se ve a simple vista. Las dos herramientas se complementan:
 
-> 🧮 En el **Servidor 2** calculas cuántas calorías y macronutrientes necesitas al día.
-> 🍎 En el **Servidor 1** sumas lo que vas a comer y lo comparas con esa cifra.
+> 🧮 En el **Servidor 1** calculas cuántas calorías y macronutrientes necesitas al día.
+> 🍎 En el **Servidor 2** sumas lo que vas a comer y lo comparas con esa cifra.
 
 ---
 
@@ -48,8 +48,8 @@ Cada vez que recargas la página, el balanceador te manda a uno de los dos servi
 ```mermaid
 flowchart LR
     U(["👤 Navegador"]) -->|"http://localhost"| B["⚖️ balanceador<br/>Nginx"]
-    B -->|"round-robin"| W1["🍎 web1<br/>Contador de calorías"]
-    B -->|"round-robin"| W2["🧮 web2<br/>Calculadora IMC"]
+    B -->|"round-robin"| W1["🧮 web1<br/>Calculadora IMC"]
+    B -->|"round-robin"| W2["🍎 web2<br/>Contador de calorías"]
 ```
 
 | Contenedor | Función | Contenido |
@@ -64,7 +64,18 @@ Nginx reparte las peticiones por **round-robin**: una a cada servidor, por turno
 
 ## 🖥️ Los dos servidores
 
-### 🍎 Servidor 1: contador de calorías
+### 🧮 Servidor 1: calculadora de IMC y calorías diarias
+
+Introduce tu sexo, edad, peso, altura, nivel de actividad física y, si lo conoces, tu porcentaje de grasa corporal. Obtienes:
+
+| Resultado | Cómo se calcula |
+|---|---|
+| **IMC** y su clasificación (OMS) | peso ÷ altura² |
+| **Metabolismo basal** | Mifflin-St Jeor y, si indicas tu % de grasa, también Katch-McArdle (más precisa) |
+| **Consumo diario recomendado** | Metabolismo basal × factor de actividad |
+| **Reparto de macronutrientes** | 50 % hidratos · 20 % proteínas · 30 % grasas, en gramos y kcal |
+
+### 🍎 Servidor 2: contador de calorías
 
 Marca los alimentos que vas a comer y la página suma en tiempo real las **calorías** y los **gramos de proteínas, hidratos y grasas**.
 
@@ -82,17 +93,6 @@ input:checked {
 }
 ```
 
-### 🧮 Servidor 2: calculadora de IMC y calorías diarias
-
-Introduce tu sexo, edad, peso, altura, nivel de actividad física y, si lo conoces, tu porcentaje de grasa corporal. Obtienes:
-
-| Resultado | Cómo se calcula |
-|---|---|
-| **IMC** y su clasificación (OMS) | peso ÷ altura² |
-| **Metabolismo basal** | Mifflin-St Jeor y, si indicas tu % de grasa, también Katch-McArdle (más precisa) |
-| **Consumo diario recomendado** | Metabolismo basal × factor de actividad |
-| **Reparto de macronutrientes** | 50 % hidratos · 20 % proteínas · 30 % grasas, en gramos y kcal |
-
 ---
 
 ## 📁 Estructura del proyecto
@@ -102,10 +102,10 @@ practica-docker-windows/
 ├── 📄 docker-compose.yml      # Define los tres contenedores
 ├── ⚖️ balanceador/
 │   └── default.conf           # Configuración de Nginx (upstream + proxy)
-├── 🍎 web1/
-│   └── index.html             # Servidor 1: contador de calorías
-├── 🧮 web2/
-│   └── index.html             # Servidor 2: calculadora IMC
+├── 🧮 web1/
+│   └── index.html             # Servidor 1: calculadora IMC
+├── 🍎 web2/
+│   └── index.html             # Servidor 2: contador de calorías
 └── 📘 README.md
 ```
 
@@ -210,9 +210,9 @@ Cuando hay % de grasa, el consumo diario se calcula con Katch-McArdle; si no, co
 
 ### Datos de los alimentos
 
-- Las calorías y los macronutrientes del Servidor 1 salen de **[USDA FoodData Central (SR Legacy)](https://fdc.nal.usda.gov/)**, la base de datos de composición de alimentos del Departamento de Agricultura de EE. UU. Para cada ración se toma el valor por 100 g y se ajusta al peso de la ración.
+- Las calorías y los macronutrientes del Servidor 2 salen de **[USDA FoodData Central (SR Legacy)](https://fdc.nal.usda.gov/)**, la base de datos de composición de alimentos del Departamento de Agricultura de EE. UU. Para cada ración se toma el valor por 100 g y se ajusta al peso de la ración.
 - El queso fresco batido 0 % y el refresco de cola usan los valores de su etiqueta.
-- El reparto de macronutrientes del Servidor 2 está dentro de los rangos de referencia de la **EFSA** y del **Institute of Medicine**: hidratos 45-60 %, proteínas 10-35 % y grasas 20-35 % de la energía diaria.
+- El reparto de macronutrientes del Servidor 1 está dentro de los rangos de referencia de la **EFSA** y del **Institute of Medicine**: hidratos 45-60 %, proteínas 10-35 % y grasas 20-35 % de la energía diaria.
 
 > ⚠️ **Aviso:** NutriWeb es un proyecto educativo. Los valores son medias de referencia y no sustituyen el consejo de un profesional de la nutrición.
 
