@@ -152,7 +152,8 @@
             margin: 20px 0;
         }
 
-        .resultado[hidden] {
+        .resultado[hidden],
+        .dato[hidden] {
             display: none;
         }
 
@@ -234,7 +235,7 @@
 </head>
 <body>
     <header>
-        <h1> Calculadora Harris-Benedict</h1>
+        <h1>Calculadora de metabolismo basal</h1>
         <p class="servidor">Estás en el SERVIDOR 2</p>
     </header>
 
@@ -242,7 +243,9 @@
         <form id="calculadora">
             <p class="instrucciones">
                 Introduce tus datos para calcular tu índice de masa corporal (IMC), tu metabolismo
-                basal con la ecuación de Harris-Benedict y las calorías diarias que necesitas.
+                basal y las calorías diarias que necesitas. Se usa la ecuación de Mifflin-St Jeor y,
+                si indicas tu porcentaje de grasa corporal, la de Katch-McArdle, que es más precisa
+                porque tiene en cuenta tu masa muscular.
             </p>
 
             <fieldset>
@@ -256,6 +259,7 @@
                 <label><span>Edad <em>(años)</em></span><input type="number" id="edad" min="15" max="100" step="1" required></label>
                 <label><span>Peso <em>(kg)</em></span><input type="number" id="peso" min="30" max="250" step="0.1" required></label>
                 <label><span>Altura <em>(cm)</em></span><input type="number" id="altura" min="120" max="230" step="1" required></label>
+                <label><span>Grasa corporal <em>(%, opcional: báscula de bioimpedancia, pliegues o DEXA)</em></span><input type="number" id="grasa" min="3" max="60" step="0.1"></label>
             </fieldset>
 
             <fieldset>
@@ -281,8 +285,11 @@
         <section class="resultado" id="resultado" hidden>
             <div class="dato"><span>Índice de masa corporal</span><b id="imc"></b></div>
             <div class="dato"><span>Clasificación (OMS)</span><b id="categoria"></b></div>
-            <div class="dato"><span>Metabolismo basal (Harris-Benedict)</span><b id="tmb"></b></div>
-            <div class="dato principal"><span>Consumo diario recomendado</span><b id="calorias"></b></div>
+            <div class="dato"><span>Metabolismo basal <em>(Mifflin-St Jeor)</em></span><b id="tmb-mifflin"></b></div>
+            <div class="dato" id="fila-masa-magra" hidden><span>Masa libre de grasa</span><b id="masa-magra"></b></div>
+            <div class="dato" id="fila-katch" hidden><span>Metabolismo basal <em>(Katch-McArdle)</em></span><b id="tmb-katch"></b></div>
+            <div class="dato principal"><span>Consumo diario recomendado <em id="formula-usada"></em></span><b id="calorias"></b></div>
+            <p class="nota" id="nota-formula"></p>
 
             <h2 class="subtitulo">Reparto de macronutrientes</h2>
             <div class="dato"><span>Hidratos de carbono <em>(50 %)</em></span><b id="hidratos"></b></div>
@@ -315,7 +322,7 @@
     </main>
 
     <footer>
-        Práctica Docker &middot; Servidor 2 &middot; Harris-Benedict revisada (Roza y Shizgal, 1984)
+        Práctica Docker &middot; Servidor 2 &middot; Mifflin-St Jeor (1990) y Katch-McArdle
     </footer>
 
     <script>
@@ -332,12 +339,15 @@
             return 'Obesidad grado III';
         }
 
-        // Ecuación de Harris-Benedict revisada por Roza y Shizgal (1984)
-        function harrisBenedict(sexo, peso, altura, edad) {
-            if (sexo === 'hombre') {
-                return 88.362 + 13.397 * peso + 4.799 * altura - 5.677 * edad;
-            }
-            return 447.593 + 9.247 * peso + 3.098 * altura - 4.330 * edad;
+        // Ecuación de Mifflin-St Jeor (1990): solo cambia la constante final según el sexo
+        function mifflinStJeor(sexo, peso, altura, edad) {
+            const base = 10 * peso + 6.25 * altura - 5 * edad;
+            return sexo === 'hombre' ? base + 5 : base - 161;
+        }
+
+        // Ecuación de Katch-McArdle: depende solo de la masa libre de grasa (kg)
+        function katchMcArdle(masaMagra) {
+            return 370 + 21.6 * masaMagra;
         }
 
         // Porcentaje de las calorías diarias y kcal que aporta cada gramo
@@ -355,15 +365,33 @@
             const peso = Number(document.getElementById('peso').value);
             const altura = Number(document.getElementById('altura').value);
             const actividad = Number(document.getElementById('actividad').value);
+            const grasaTexto = document.getElementById('grasa').value;
+            const conGrasa = grasaTexto !== '';
 
             const metros = altura / 100;
             const imc = peso / (metros * metros);
-            const tmb = harrisBenedict(sexo, peso, altura, edad);
+            const tmbMifflin = mifflinStJeor(sexo, peso, altura, edad);
+
+            // Si se conoce el % de grasa, Katch-McArdle es la más precisa; si no, Mifflin-St Jeor
+            let tmb = tmbMifflin;
+            if (conGrasa) {
+                const masaMagra = peso * (1 - Number(grasaTexto) / 100);
+                tmb = katchMcArdle(masaMagra);
+                document.getElementById('masa-magra').textContent = numero.format(masaMagra) + ' kg';
+                document.getElementById('tmb-katch').textContent = Math.round(tmb) + ' kcal';
+            }
             const calorias = tmb * actividad;
+
+            document.getElementById('fila-masa-magra').hidden = !conGrasa;
+            document.getElementById('fila-katch').hidden = !conGrasa;
+            document.getElementById('formula-usada').textContent = conGrasa ? '(según Katch-McArdle)' : '(según Mifflin-St Jeor)';
+            document.getElementById('nota-formula').textContent = conGrasa
+                ? 'Katch-McArdle calcula el gasto a partir de tu masa libre de grasa, por eso es la más precisa cuando el porcentaje de grasa está bien medido.'
+                : 'Mifflin-St Jeor es la ecuación recomendada por la Academy of Nutrition and Dietetics cuando no se conoce la composición corporal. Si indicas tu % de grasa, se usará Katch-McArdle, que es más precisa.';
 
             document.getElementById('imc').textContent = numero.format(imc);
             document.getElementById('categoria').textContent = categoriaImc(imc);
-            document.getElementById('tmb').textContent = Math.round(tmb) + ' kcal';
+            document.getElementById('tmb-mifflin').textContent = Math.round(tmbMifflin) + ' kcal';
             document.getElementById('calorias').textContent = Math.round(calorias) + ' kcal';
             document.getElementById('perder').textContent = Math.round(calorias - 500) + ' kcal';
 

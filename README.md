@@ -84,12 +84,12 @@ input:checked {
 
 ### 🧮 Servidor 2: calculadora de IMC y calorías diarias
 
-Introduce tu sexo, edad, peso, altura y nivel de actividad física, y obtienes:
+Introduce tu sexo, edad, peso, altura, nivel de actividad física y, si lo conoces, tu porcentaje de grasa corporal. Obtienes:
 
 | Resultado | Cómo se calcula |
 |---|---|
 | **IMC** y su clasificación (OMS) | peso ÷ altura² |
-| **Metabolismo basal** | Ecuación de Harris-Benedict, distinta para hombre y mujer |
+| **Metabolismo basal** | Mifflin-St Jeor y, si indicas tu % de grasa, también Katch-McArdle (más precisa) |
 | **Consumo diario recomendado** | Metabolismo basal × factor de actividad |
 | **Reparto de macronutrientes** | 50 % hidratos · 20 % proteínas · 30 % grasas, en gramos y kcal |
 
@@ -169,12 +169,23 @@ SERVIDOR 2
 
 ## 🔬 Cálculos y fuentes
 
-### Ecuación de Harris-Benedict (revisión de Roza y Shizgal, 1984)
+### Metabolismo basal
+
+**Mifflin-St Jeor (1990).** Se usa siempre. Es la ecuación que recomienda la Academy of Nutrition and Dietetics cuando no se conoce la composición corporal.
 
 | Sexo | Metabolismo basal (kcal/día) |
 |---|---|
-| 👨 Hombre | 88,362 + 13,397 × peso (kg) + 4,799 × altura (cm) − 5,677 × edad (años) |
-| 👩 Mujer | 447,593 + 9,247 × peso (kg) + 3,098 × altura (cm) − 4,330 × edad (años) |
+| 👨 Hombre | 10 × peso (kg) + 6,25 × altura (cm) − 5 × edad (años) + 5 |
+| 👩 Mujer | 10 × peso (kg) + 6,25 × altura (cm) − 5 × edad (años) − 161 |
+
+**Katch-McArdle.** Se usa si indicas tu % de grasa corporal. Parte de la masa libre de grasa, así que tiene en cuenta la masa muscular y no depende del sexo.
+
+| Paso | Fórmula |
+|---|---|
+| Masa libre de grasa (kg) | peso × (1 − % grasa ÷ 100) |
+| Metabolismo basal (kcal/día) | 370 + 21,6 × masa libre de grasa |
+
+Cuando hay % de grasa, el consumo diario se calcula con Katch-McArdle; si no, con Mifflin-St Jeor. La página indica cuál ha usado.
 
 ### Factores de actividad
 
