@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriWeb - Servidor 2</title>
     <style>
+        /* Estilos generales: tipo de letra y colores de fondo */
         * {
             box-sizing: border-box;
         }
@@ -16,6 +17,7 @@
             color: #263238;
         }
 
+        /* Cabecera verde con el título y la etiqueta del servidor */
         header {
             background: #2e7d32;
             color: #fff;
@@ -36,6 +38,7 @@
             border-radius: 20px;
         }
 
+        /* Zona central. Aquí empiezan a cero los cuatro contadores que suman lo elegido */
         main {
             max-width: 1200px;
             margin: 24px auto;
@@ -50,6 +53,7 @@
             border-radius: 6px;
         }
 
+        /* Cajas blancas que agrupan cada lista de alimentos */
         fieldset {
             background: #fff;
             border: 1px solid #c8e6c9;
@@ -101,6 +105,7 @@
             border-radius: 8px;
         }
 
+        /* Círculo con la letra P, H o G */
         .grupo h2 .letra {
             display: inline-flex;
             align-items: center;
@@ -142,6 +147,7 @@
             background: #6a1b9a;
         }
 
+        /* Etiquetas pequeñas de cada alimento (P, H, G) con el color de su macronutriente */
         .macros {
             display: flex;
             flex-wrap: wrap;
@@ -177,6 +183,7 @@
             margin-top: 8px;
         }
 
+        /* Borde verde para los saludables y naranja para los poco saludables */
         .saludable {
             border-left: 5px solid #66bb6a;
         }
@@ -195,6 +202,7 @@
             background: #fbe9e7;
         }
 
+        /* Cada alimento es una fila: se puede pulsar en cualquier parte para marcarlo */
         label {
             display: flex;
             align-items: center;
@@ -222,6 +230,7 @@
             color: #2e7d32;
         }
 
+        /* Casillas para marcar los alimentos */
         input[type="checkbox"] {
             width: 18px;
             height: 18px;
@@ -237,6 +246,7 @@
             font-weight: bold;
         }
 
+        /* Barra verde de totales: se queda fija abajo al bajar por la página */
         .resultado {
             position: sticky;
             bottom: 0;
@@ -248,6 +258,7 @@
             border-radius: 8px 8px 0 0;
         }
 
+        /* Escriben en pantalla el valor de cada contador */
         .total::after {
             content: counter(total) " kcal";
             font-weight: bold;
@@ -282,6 +293,7 @@
             content: counter(grasas) " g";
         }
 
+        /* Botón «Borrar selección» */
         button {
             margin-top: 12px;
             background: #fff;
@@ -297,6 +309,7 @@
             background: #e8f5e9;
         }
 
+        /* Pie de página */
         footer {
             text-align: center;
             color: #607d8b;
@@ -306,12 +319,14 @@
     </style>
 </head>
 <body>
+    <!-- Cabecera: nombre de la web y servidor que ha respondido -->
     <header>
         <h1>NutriWeb</h1>
         <p class="servidor">Estás en el SERVIDOR 2</p>
     </header>
 
     <main>
+        <!-- Lista de alimentos. Cada casilla guarda en su atributo style las kcal y los gramos de proteínas (p), hidratos (h) y grasas (g); al marcarla, el CSS los suma a los totales -->
         <form>
             <p class="instrucciones">
                 Marca los alimentos que vas a comer y verás el total de calorías abajo.
@@ -320,6 +335,7 @@
                 <small class="macros leyenda"><i class="m-p">P = proteínas</i><i class="m-h">H = hidratos de carbono</i><i class="m-g">G = grasas</i></small>
             </p>
 
+            <!-- Frutas y verduras, una al lado de la otra -->
             <div class="columnas">
                 <fieldset>
                     <legend>Frutas</legend>
@@ -338,6 +354,7 @@
                 </fieldset>
             </div>
 
+            <!-- Proteínas: saludables a la izquierda y poco saludables a la derecha -->
             <section class="grupo proteinas">
                 <h2><span class="letra">P</span>Alimentos proteicos</h2>
 
@@ -367,6 +384,7 @@
                 </fieldset>
             </section>
 
+            <!-- Hidratos de carbono: misma estructura -->
             <section class="grupo hidratos">
                 <h2><span class="letra">H</span>Hidratos de carbono</h2>
 
@@ -393,6 +411,7 @@
                 </fieldset>
             </section>
 
+            <!-- Grasas: misma estructura -->
             <section class="grupo grasas">
                 <h2><span class="letra">G</span>Grasas</h2>
 
@@ -418,6 +437,7 @@
                 </fieldset>
             </section>
 
+            <!-- Totales: los números los escribe el CSS a partir de los contadores -->
             <div class="resultado">
                 <div class="total">Total:</div>
                 <div class="totales-macros">

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>NutriWeb - Servidor 1</title>
     <style>
+        /* Estilos generales: tipo de letra y colores de fondo */
         * {
             box-sizing: border-box;
         }
@@ -16,6 +17,7 @@
             color: #263238;
         }
 
+        /* Cabecera verde con el título y la etiqueta del servidor */
         header {
             background: #2e7d32;
             color: #fff;
@@ -36,6 +38,7 @@
             border-radius: 20px;
         }
 
+        /* Zona central: centrada y con un ancho máximo para que se lea bien */
         main {
             max-width: 760px;
             margin: 24px auto;
@@ -49,6 +52,7 @@
             border-radius: 6px;
         }
 
+        /* Cajas blancas que agrupan cada parte del formulario */
         fieldset {
             background: #fff;
             border: 1px solid #c8e6c9;
@@ -64,6 +68,7 @@
             padding: 0 6px;
         }
 
+        /* Cada fila del formulario: texto a la izquierda y campo a la derecha */
         label {
             display: flex;
             align-items: center;
@@ -87,6 +92,7 @@
             font-size: 0.9em;
         }
 
+        /* Botones redondos para elegir hombre o mujer */
         input[type="radio"] {
             width: 18px;
             height: 18px;
@@ -97,6 +103,7 @@
             font-weight: bold;
         }
 
+        /* Casillas para escribir números y desplegable de actividad */
         input[type="number"],
         select {
             width: 140px;
@@ -116,6 +123,7 @@
             outline: 2px solid #66bb6a;
         }
 
+        /* Botones «Calcular» (verde) y «Borrar datos» (blanco) */
         .botones {
             text-align: center;
         }
@@ -144,6 +152,7 @@
             background: #1b5e20;
         }
 
+        /* Caja verde de resultados: está oculta hasta que se pulsa «Calcular» */
         .resultado {
             background: #2e7d32;
             color: #fff;
@@ -157,6 +166,7 @@
             display: none;
         }
 
+        /* Cada línea de resultado: nombre a la izquierda y valor a la derecha */
         .dato {
             display: flex;
             justify-content: space-between;
@@ -178,6 +188,7 @@
             font-size: 1.6em;
         }
 
+        /* Título y textos de ayuda dentro de los resultados */
         .subtitulo {
             font-size: 1.1em;
             margin: 20px 0 4px;
@@ -199,6 +210,7 @@
             margin: 12px 0 0;
         }
 
+        /* Tabla de referencia del IMC */
         .tabla-imc {
             width: 100%;
             border-collapse: collapse;
@@ -225,6 +237,7 @@
             color: #607d8b;
         }
 
+        /* Pie de página */
         footer {
             text-align: center;
             color: #607d8b;
@@ -234,12 +247,14 @@
     </style>
 </head>
 <body>
+    <!-- Cabecera: nombre de la herramienta y servidor que ha respondido -->
     <header>
         <h1>Calculadora de metabolismo basal</h1>
         <p class="servidor">Estás en el SERVIDOR 1</p>
     </header>
 
     <main>
+        <!-- Formulario: aquí la persona introduce sus datos -->
         <form id="calculadora">
             <p class="instrucciones">
                 Introduce tus datos para calcular tu índice de masa corporal (IMC), tu metabolismo
@@ -248,12 +263,14 @@
                 porque tiene en cuenta tu masa muscular.
             </p>
 
+            <!-- El sexo cambia un número de la fórmula de Mifflin-St Jeor -->
             <fieldset>
                 <legend>Sexo</legend>
                 <label><input type="radio" name="sexo" value="hombre" required><span>Hombre</span></label>
                 <label><input type="radio" name="sexo" value="mujer"><span>Mujer</span></label>
             </fieldset>
 
+            <!-- min y max impiden escribir valores imposibles. La grasa corporal es opcional -->
             <fieldset>
                 <legend>Datos personales</legend>
                 <label><span>Edad <em>(años)</em></span><input type="number" id="edad" min="15" max="100" step="1" required></label>
@@ -262,6 +279,7 @@
                 <label><span>Grasa corporal <em>(%, opcional: báscula de bioimpedancia, pliegues o DEXA)</em></span><input type="number" id="grasa" min="3" max="60" step="0.1"></label>
             </fieldset>
 
+            <!-- El número de cada opción (value) multiplica el metabolismo basal -->
             <fieldset>
                 <legend>Actividad física</legend>
                 <label>
@@ -282,6 +300,7 @@
             </div>
         </form>
 
+        <!-- Resultados: empiezan ocultos (hidden) y JavaScript los rellena al pulsar «Calcular» -->
         <section class="resultado" id="resultado" hidden>
             <div class="dato"><span>Índice de masa corporal</span><b id="imc"></b></div>
             <div class="dato"><span>Clasificación (OMS)</span><b id="categoria"></b></div>
@@ -307,6 +326,7 @@
             </p>
         </section>
 
+        <!-- Tabla de referencia de la Organización Mundial de la Salud -->
         <fieldset>
             <legend>Tabla de IMC (OMS)</legend>
             <table class="tabla-imc">
@@ -326,10 +346,13 @@
     </footer>
 
     <script>
+        // Elementos de la página que usa el script
         const form = document.getElementById('calculadora');
         const resultado = document.getElementById('resultado');
+        // Muestra los números al estilo español: coma decimal y como mucho 1 decimal
         const numero = new Intl.NumberFormat('es-ES', { maximumFractionDigits: 1 });
 
+        // Devuelve la clasificación de la OMS que corresponde a un IMC
         function categoriaImc(imc) {
             if (imc < 18.5) return 'Bajo peso';
             if (imc < 25) return 'Peso normal';
@@ -357,9 +380,11 @@
             { id: 'grasas', porcentaje: 0.30, kcalPorGramo: 9 }
         ];
 
+        // Al pulsar «Calcular»: leer los datos, hacer los cálculos y mostrar los resultados
         form.addEventListener('submit', (evento) => {
-            evento.preventDefault();
+            evento.preventDefault(); // Evita que la página se recargue y se pierdan los resultados
 
+            // 1. Leer lo que ha escrito la persona
             const sexo = form.sexo.value;
             const edad = Number(document.getElementById('edad').value);
             const peso = Number(document.getElementById('peso').value);
@@ -368,8 +393,10 @@
             const grasaTexto = document.getElementById('grasa').value;
             const conGrasa = grasaTexto !== '';
 
+            // 2. IMC = peso ÷ altura² (con la altura en metros)
             const metros = altura / 100;
             const imc = peso / (metros * metros);
+            // 3. Metabolismo basal: la energía que gasta el cuerpo en reposo
             const tmbMifflin = mifflinStJeor(sexo, peso, altura, edad);
 
             // Si se conoce el % de grasa, Katch-McArdle es la más precisa; si no, Mifflin-St Jeor
@@ -380,8 +407,10 @@
                 document.getElementById('masa-magra').textContent = numero.format(masaMagra) + ' kg';
                 document.getElementById('tmb-katch').textContent = Math.round(tmb) + ' kcal';
             }
+            // 4. Calorías del día = metabolismo basal × nivel de actividad
             const calorias = tmb * actividad;
 
+            // 5. Mostrar los resultados (las filas de Katch-McArdle solo si hay % de grasa)
             document.getElementById('fila-masa-magra').hidden = !conGrasa;
             document.getElementById('fila-katch').hidden = !conGrasa;
             document.getElementById('formula-usada').textContent = conGrasa ? '(según Katch-McArdle)' : '(según Mifflin-St Jeor)';
@@ -395,6 +424,7 @@
             document.getElementById('calorias').textContent = Math.round(calorias) + ' kcal';
             document.getElementById('perder').textContent = Math.round(calorias - 500) + ' kcal';
 
+            // 6. Pasar el reparto de calorías a gramos de cada macronutriente
             macronutrientes.forEach((macro) => {
                 const kcal = calorias * macro.porcentaje;
                 const gramos = kcal / macro.kcalPorGramo;
@@ -403,6 +433,7 @@
             resultado.hidden = false;
         });
 
+        // Al pulsar «Borrar datos», volver a ocultar los resultados
         form.addEventListener('reset', () => {
             resultado.hidden = true;
         });
