@@ -37,7 +37,7 @@
         }
 
         main {
-            max-width: 760px;
+            max-width: 1200px;
             margin: 24px auto;
             padding: 0 16px;
             counter-reset: total proteinas hidratos grasas;
@@ -64,12 +64,25 @@
             padding: 0 6px;
         }
 
+        /* Los apartados se colocan en columnas; en pantallas estrechas pasan a una sola */
+        .columnas,
         .grupo {
-            margin: 32px 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr));
+            gap: 20px;
+            align-items: start;
+            margin: 24px 0;
+        }
+
+        .columnas fieldset,
+        .grupo fieldset {
+            margin: 0;
+            min-width: 0;
         }
 
         .grupo h2 {
-            margin: 0;
+            grid-column: 1 / -1;
+            margin: 8px 0 0;
             color: #2e7d32;
             border-bottom: 2px solid #c8e6c9;
             padding-bottom: 6px;
@@ -307,21 +320,23 @@
                 <small class="macros leyenda"><i class="m-p">P = proteínas</i><i class="m-h">H = hidratos de carbono</i><i class="m-g">G = grasas</i></small>
             </p>
 
-            <fieldset>
-                <legend>Frutas</legend>
-                <label><input type="checkbox" style="--kcal: 52; --p: 0; --h: 14; --g: 0"><span>Manzana <em>(1 unidad, 100 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 14 g</i><i class="m-g">G 0 g</i></small></span><b>52 kcal</b></label>
-                <label><input type="checkbox" style="--kcal: 105; --p: 1; --h: 27; --g: 0"><span>Plátano <em>(1 unidad, 118 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 27 g</i><i class="m-g">G 0 g</i></small></span><b>105 kcal</b></label>
-                <label><input type="checkbox" style="--kcal: 62; --p: 1; --h: 15; --g: 0"><span>Naranja <em>(1 unidad, 131 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 15 g</i><i class="m-g">G 0 g</i></small></span><b>62 kcal</b></label>
-                <label><input type="checkbox" style="--kcal: 32; --p: 1; --h: 8; --g: 0"><span>Fresas <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 8 g</i><i class="m-g">G 0 g</i></small></span><b>32 kcal</b></label>
-            </fieldset>
+            <div class="columnas">
+                <fieldset>
+                    <legend>Frutas</legend>
+                    <label><input type="checkbox" style="--kcal: 52; --p: 0; --h: 14; --g: 0"><span>Manzana <em>(1 unidad, 100 g)</em><small class="macros"><i class="m-p">P 0 g</i><i class="m-h">H 14 g</i><i class="m-g">G 0 g</i></small></span><b>52 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 105; --p: 1; --h: 27; --g: 0"><span>Plátano <em>(1 unidad, 118 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 27 g</i><i class="m-g">G 0 g</i></small></span><b>105 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 62; --p: 1; --h: 15; --g: 0"><span>Naranja <em>(1 unidad, 131 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 15 g</i><i class="m-g">G 0 g</i></small></span><b>62 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 32; --p: 1; --h: 8; --g: 0"><span>Fresas <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 8 g</i><i class="m-g">G 0 g</i></small></span><b>32 kcal</b></label>
+                </fieldset>
 
-            <fieldset>
-                <legend>Verduras</legend>
-                <label><input type="checkbox" style="--kcal: 22; --p: 1; --h: 5; --g: 0"><span>Tomate <em>(1 unidad, 120 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 5 g</i><i class="m-g">G 0 g</i></small></span><b>22 kcal</b></label>
-                <label><input type="checkbox" style="--kcal: 15; --p: 1; --h: 3; --g: 0"><span>Lechuga <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 3 g</i><i class="m-g">G 0 g</i></small></span><b>15 kcal</b></label>
-                <label><input type="checkbox" style="--kcal: 41; --p: 1; --h: 10; --g: 0"><span>Zanahoria <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 10 g</i><i class="m-g">G 0 g</i></small></span><b>41 kcal</b></label>
-                <label><input type="checkbox" style="--kcal: 34; --p: 3; --h: 7; --g: 0"><span>Brócoli <em>(100 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 7 g</i><i class="m-g">G 0 g</i></small></span><b>34 kcal</b></label>
-            </fieldset>
+                <fieldset>
+                    <legend>Verduras</legend>
+                    <label><input type="checkbox" style="--kcal: 22; --p: 1; --h: 5; --g: 0"><span>Tomate <em>(1 unidad, 120 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 5 g</i><i class="m-g">G 0 g</i></small></span><b>22 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 15; --p: 1; --h: 3; --g: 0"><span>Lechuga <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 3 g</i><i class="m-g">G 0 g</i></small></span><b>15 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 41; --p: 1; --h: 10; --g: 0"><span>Zanahoria <em>(100 g)</em><small class="macros"><i class="m-p">P 1 g</i><i class="m-h">H 10 g</i><i class="m-g">G 0 g</i></small></span><b>41 kcal</b></label>
+                    <label><input type="checkbox" style="--kcal: 34; --p: 3; --h: 7; --g: 0"><span>Brócoli <em>(100 g)</em><small class="macros"><i class="m-p">P 3 g</i><i class="m-h">H 7 g</i><i class="m-g">G 0 g</i></small></span><b>34 kcal</b></label>
+                </fieldset>
+            </div>
 
             <section class="grupo proteinas">
                 <h2><span class="letra">P</span>Alimentos proteicos</h2>
